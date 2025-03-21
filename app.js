@@ -3,6 +3,7 @@ const multer = require('multer');
 const QRCode = require('qrcode');
 const path = require('path');
 const moment = require('moment');
+const fs = require('fs');
 
 // Configurar momento para português
 moment.locale('pt-br');
@@ -14,11 +15,27 @@ const port = process.env.PORT || 3005;
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Armazenamento temporário em memória
-const memoryStorage = new Map();
+// Configuração de diretórios
+const uploadDir = process.env.RENDER ? '/tmp/uploads' : path.join(process.cwd(), 'public', 'uploads');
 
-// Configuração do multer para armazenamento em memória
-const storage = multer.memoryStorage();
+// Garantir que o diretório de uploads existe
+try {
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+} catch (err) {
+    console.error('Erro ao criar diretório de uploads:', err);
+}
+
+// Configuração do multer para upload de imagens
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, uploadDir);
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname.replace(/[^a-zA-Z0-9.]/g, ''));
+    }
+});
 
 const upload = multer({
     storage: storage,
@@ -43,6 +60,7 @@ const upload = multer({
 app.set('view engine', 'ejs');
 app.set('views', path.join(process.cwd(), 'src', 'views'));
 app.use(express.static(path.join(process.cwd(), 'src', 'public')));
+app.use('/uploads', express.static(uploadDir));
 
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
@@ -68,20 +86,6 @@ app.get('/', (req, res) => {
     }
 });
 
-// Rota para servir imagens em memória
-app.get('/uploads/:id', (req, res) => {
-    const imageData = memoryStorage.get(req.params.id);
-    if (imageData) {
-        res.writeHead(200, {
-            'Content-Type': imageData.mimetype,
-            'Content-Length': imageData.buffer.length
-        });
-        res.end(imageData.buffer);
-    } else {
-        res.status(404).send('Imagem não encontrada');
-    }
-});
-
 // Rota para criar perfil do pet
 app.post('/criar-pet', upload.array('fotos', 5), async (req, res) => {
     try {
@@ -92,15 +96,8 @@ app.post('/criar-pet', upload.array('fotos', 5), async (req, res) => {
             return res.status(400).send('Por favor, envie pelo menos uma foto do pet.');
         }
 
-        // Processar fotos e salvar em memória
-        const fotos = req.files.map(file => {
-            const id = Date.now() + '-' + Math.random().toString(36).substring(7);
-            memoryStorage.set(id, {
-                buffer: file.buffer,
-                mimetype: file.mimetype
-            });
-            return '/uploads/' + id;
-        });
+        // Processar fotos
+        const fotos = req.files.map(file => '/uploads/' + file.filename);
         
         // Gerar ID único para o pet
         const petId = Date.now().toString();
@@ -111,14 +108,14 @@ app.post('/criar-pet', upload.array('fotos', 5), async (req, res) => {
             margin: 2,
             quality: 0.8
         });
-        
-        // Salvar dados do pet em memória
-        memoryStorage.set(`pet_${petId}`, {
+
+        // Salvar dados do pet (em produção você usaria um banco de dados)
+        const petData = {
             nomeDono,
             nomePet,
             dataPet,
             fotos
-        });
+        };
         
         res.render('sucesso', {
             nomeDono,
@@ -137,11 +134,13 @@ app.post('/criar-pet', upload.array('fotos', 5), async (req, res) => {
 // Rota para visualizar perfil do pet
 app.get('/pet/:id', (req, res) => {
     try {
-        const petData = memoryStorage.get(`pet_${req.params.id}`);
-        
-        if (!petData) {
-            return res.status(404).send('Perfil do pet não encontrado');
-        }
+        // Em produção, você buscaria os dados do banco
+        const petData = {
+            nomeDono: 'Nome do Dono',
+            nomePet: 'Nome do Pet',
+            dataPet: '2023-01-01',
+            fotos: []
+        };
         
         res.render('perfil', {
             pet: petData,

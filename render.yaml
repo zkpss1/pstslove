@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: pstslove
+    env: node
+    buildCommand: npm install
+    startCommand: node app.js
+    envVars:
+      - key: RENDER
+        value: true
+    disk:
+      name: uploads
+      mountPath: /tmp/uploads
+      sizeGB: 1
