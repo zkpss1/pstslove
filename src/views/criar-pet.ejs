@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Perfil do Pet - PetLove</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        :root {
+            --primary-color: #FF69B4;
+            --secondary-color: #FFB6C1;
+            --background-color: #FFF5F7;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .create-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .form-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(255, 105, 180, 0.1);
+        }
+
+        .form-section h1 {
+            color: var(--primary-color);
+            font-size: 2em;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .file-upload {
+            border: 2px dashed #eee;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-color);
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .upload-label {
+            display: block;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .upload-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-photo {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #ff4444;
+        }
+
+        .submit-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .preview-section {
+            position: sticky;
+            top: 100px;
+        }
+
+        .phone-mockup {
+            background: white;
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .phone-screen {
+            background: var(--background-color);
+            border-radius: 30px;
+            overflow: hidden;
+            padding: 20px;
+            min-height: 600px;
+        }
+
+        .preview-content {
+            text-align: center;
+        }
+
+        .preview-header {
+            margin-bottom: 2rem;
+        }
+
+        .preview-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin: 1rem 0;
+        }
+
+        .preview-counter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .preview-time {
+            background: white;
+            padding: 1rem;
+            border-radius: 15px;
+            min-width: 80px;
+        }
+
+        .preview-time span {
+            display: block;
+            font-size: 1.5em;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .preview-time small {
+            color: #666;
+        }
+
+        .preview-photos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .preview-photo-placeholder {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 1024px) {
+            .create-container {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-section {
+                position: static;
+                order: -1;
+            }
+
+            .phone-mockup {
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .create-container {
+                padding: 6rem 1rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <h1 style="font-size: 1.5em; color: var(--primary-color);">PetLove 🐾</h1>
+            <a href="/" style="color: var(--primary-color); text-decoration: none;">Voltar</a>
+        </nav>
+    </header>
+
+    <div class="create-container">
+        <div class="form-section animate__animated animate__fadeInLeft">
+            <h1>Criar Perfil do Pet</h1>
+            <form action="/criar-pet" method="POST" enctype="multipart/form-data" id="petForm">
+                <div class="form-group">
+                    <label for="nomeDono">Seu Nome</label>
+                    <input type="text" id="nomeDono" name="nomeDono" required placeholder="Ex: Maria Silva">
+                </div>
+
+                <div class="form-group">
+                    <label for="nomePet">Nome do Pet</label>
+                    <input type="text" id="nomePet" name="nomePet" required placeholder="Ex: Luna">
+                </div>
+
+                <div class="form-group">
+                    <label for="dataPet">Quando seu pet chegou?</label>
+                    <input type="date" id="dataPet" name="dataPet" required>
+                </div>
+
+                <div class="form-group">
+                    <div class="file-upload" id="dropZone">
+                        <input type="file" id="fotos" name="fotos" multiple accept="image/*" required>
+                        <label for="fotos" class="upload-label">
+                            <span style="font-size: 2em;">📸</span>
+                            <p>Clique ou arraste até 5 fotos do seu pet</p>
+                        </label>
+                        <div class="upload-preview" id="previewContainer"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button">
+                    Criar Página Especial 🎉
+                </button>
+            </form>
+        </div>
+
+        <div class="preview-section animate__animated animate__fadeInRight">
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="preview-content">
+                        <div class="preview-header">
+                            <span style="font-size: 3em;">🐾</span>
+                            <h2 id="previewPetName">Nome do Pet</h2>
+                            <p id="previewOwnerName" style="color: #666;">Dono(a): Seu Nome</p>
+                        </div>
+                        
+                        <div class="preview-counter">
+                            <div class="preview-time">
+                                <span>0</span>
+                                <small>Anos</small>
+                            </div>
+                            <div class="preview-time">
+                                <span>0</span>
+                                <small>Meses</small>
+                            </div>
+                            <div class="preview-time">
+                                <span>0</span>
+                                <small>Dias</small>
+                            </div>
+                        </div>
+
+                        <div class="preview-photos">
+                            <div class="preview-photo-placeholder">📸</div>
+                            <div class="preview-photo-placeholder">📸</div>
+                            <div class="preview-photo-placeholder">📸</div>
+                            <div class="preview-photo-placeholder">📸</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Preview em tempo real
+        const form = document.getElementById('petForm');
+        const previewPetName = document.getElementById('previewPetName');
+        const previewOwnerName = document.getElementById('previewOwnerName');
+        const dropZone = document.getElementById('dropZone');
+        const inputFotos = document.getElementById('fotos');
+        const previewContainer = document.getElementById('previewContainer');
+
+        // Atualizar preview do nome
+        document.getElementById('nomePet').addEventListener('input', function(e) {
+            previewPetName.textContent = e.target.value || 'Nome do Pet';
+        });
+
+        document.getElementById('nomeDono').addEventListener('input', function(e) {
+            previewOwnerName.textContent = `Dono(a): ${e.target.value || 'Seu Nome'}`;
+        });
+
+        // Drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('highlight');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('highlight');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        // Preview de fotos
+        inputFotos.addEventListener('change', function(e) {
+            handleFiles(this.files);
+        });
+
+        function handleFiles(files) {
+            const validFiles = Array.from(files).slice(0, 5);
+            previewContainer.innerHTML = '';
+            
+            validFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.createElement('div');
+                    preview.className = 'preview-item animate__animated animate__fadeIn';
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <button type="button" class="remove-photo" onclick="removePreview(this)">×</button>
+                    `;
+                    previewContainer.appendChild(preview);
+                    
+                    // Atualizar preview no telefone
+                    updatePhonePreview(e.target.result, index);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removePreview(button) {
+            const item = button.parentElement;
+            item.classList.add('animate__fadeOut');
+            setTimeout(() => {
+                item.remove();
+                // Resetar input de arquivo
+                inputFotos.value = '';
+            }, 500);
+        }
+
+        function updatePhonePreview(src, index) {
+            const previewPhotos = document.querySelector('.preview-photos');
+            const placeholders = previewPhotos.children;
+            if (placeholders[index]) {
+                placeholders[index].innerHTML = `<img src="${src}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">`;
+            }
+        }
+    </script>
+</body>
+</html>

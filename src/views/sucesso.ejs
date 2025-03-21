@@ -3,100 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil Criado com Sucesso! | <%= nomePet %></title>
+    <title>Perfil Criado! - PetLove</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="/css/style.css">
     <style>
-        .floating-emoji {
-            position: absolute;
-            font-size: 2em;
-            animation: float 3s ease-in-out infinite;
-            opacity: 0.7;
-            z-index: 1;
+        :root {
+            --primary-color: #FF69B4;
+            --secondary-color: #FFB6C1;
+            --background-color: #FFF5F7;
+            --text-color: #333;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .qr-section {
-            position: relative;
-            padding: 2rem;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            margin-top: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .qr-section img {
-            max-width: 200px;
-            margin: 1rem auto;
-            display: block;
-        }
-
-        .qr-section h2 {
-            color: #FF69B4;
-            margin-bottom: 1rem;
-            font-size: 1.5em;
-        }
-
-        .success-page {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 2rem;
-            background: linear-gradient(135deg, #FFE5F1 0%, #FFF5F7 100%);
         }
 
-        .success-card {
-            background: white;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 2rem;
+            background: white;
             border-radius: 20px;
             box-shadow: 0 8px 16px rgba(255, 105, 180, 0.1);
-            max-width: 800px;
-            width: 100%;
+            text-align: center;
         }
 
         .success-header {
-            text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
-        .success-title {
-            color: #FF69B4;
-            font-size: 2em;
+        .success-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin: 1rem 0;
+        }
+
+        .success-header p {
+            color: #666;
+            font-size: 1.2em;
             margin-bottom: 1rem;
         }
 
-        .success-message {
-            color: #666;
-            font-size: 1.2em;
-            margin-bottom: 2rem;
+        .qr-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--background-color);
+            border-radius: 20px;
         }
 
-        .pet-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+        .qr-code {
+            max-width: 200px;
+            margin: 0 auto 1rem;
         }
 
-        .info-card {
-            background: #FFF5F7;
-            padding: 1.5rem;
-            border-radius: 15px;
-            text-align: center;
+        .qr-code img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .info-card h3 {
-            color: #FF69B4;
-            margin-bottom: 0.5rem;
-        }
-
-        .photo-grid {
+        .photos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1rem;
@@ -106,104 +83,150 @@
         .photo-item {
             position: relative;
             aspect-ratio: 1;
-            overflow: hidden;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-5px);
         }
 
         .photo-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
         }
 
-        .photo-item:hover img {
-            transform: scale(1.05);
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
         }
 
-        .back-button {
+        .button {
             display: inline-block;
-            padding: 0.8rem 1.5rem;
-            background: #FF69B4;
+            padding: 1rem 2rem;
+            background: var(--primary-color);
             color: white;
             text-decoration: none;
-            border-radius: 25px;
-            transition: background-color 0.3s ease;
-            margin-top: 1rem;
+            border-radius: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .back-button:hover {
-            background: #FF1493;
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .button.secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .floating-emojis {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: float-up 4s ease-in-out infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         @media (max-width: 768px) {
-            .success-card {
+            .container {
                 padding: 1rem;
             }
 
-            .photo-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            .success-header h1 {
+                font-size: 2em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="success-page">
-        <div class="success-card animate__animated animate__fadeIn">
-            <div class="success-header">
-                <h1 class="success-title animate__animated animate__bounceIn">
-                    Perfil Criado com Sucesso! 🎉
-                </h1>
-                <p class="success-message animate__animated animate__fadeIn">
-                    O perfil de <%= nomePet %> foi criado e está pronto para ser compartilhado!
-                </p>
-            </div>
+    <div class="floating-emojis" id="emojis"></div>
 
-            <div class="pet-info">
-                <div class="info-card animate__animated animate__fadeInLeft">
-                    <h3>Nome do Pet</h3>
-                    <p><%= nomePet %> 🐾</p>
-                </div>
-                <div class="info-card animate__animated animate__fadeInRight">
-                    <h3>Nome do Dono</h3>
-                    <p><%= nomeDono %> ❤️</p>
-                </div>
-                <div class="info-card animate__animated animate__fadeInUp">
-                    <h3>Data Especial</h3>
-                    <p><%= dataPet %> 📅</p>
-                </div>
-            </div>
+    <div class="container animate__animated animate__fadeIn">
+        <div class="success-header">
+            <span style="font-size: 4em;">🎉</span>
+            <h1>Perfil Criado com Sucesso!</h1>
+            <p>O perfil de <%= nomePet %> está pronto para ser compartilhado</p>
+        </div>
 
-            <% if (fotos && fotos.length > 0) { %>
-                <div class="photo-grid">
-                    <% fotos.forEach(function(foto) { %>
-                        <div class="photo-item animate__animated animate__zoomIn">
-                            <img src="<%= foto %>" alt="Foto do <%= nomePet %>">
-                        </div>
-                    <% }); %>
-                </div>
-            <% } %>
-
-            <div class="qr-section">
-                <% ['🐾', '❤️', '🌟', '💖', '✨'].forEach(function(emoji, index) { %>
-                    <div class="floating-emoji" 
-                         style="left: <%= 20 + index * 15 %>%; 
-                                top: <%= 20 + index * 10 %>%; 
-                                animation-delay: <%= index * 0.5 %>s;">
-                        <%= emoji %>
-                    </div>
-                <% }); %>
-                
-                <h2>QR Code do Perfil</h2>
-                <img src="<%= qrCode %>" alt="QR Code do perfil do <%= nomePet %>" class="animate__animated animate__fadeIn">
-                <p>Escaneie para acessar o perfil de <%= nomePet %></p>
-            </div>
-
-            <div style="text-align: center;">
-                <a href="/" class="back-button">Voltar para Home</a>
+        <div class="qr-section animate__animated animate__fadeInUp">
+            <h2>QR Code do Perfil</h2>
+            <p>Escaneie para acessar o perfil do <%= nomePet %></p>
+            <div class="qr-code">
+                <img src="<%= qrCode %>" alt="QR Code do perfil">
             </div>
         </div>
+
+        <div class="photos-grid">
+            <% fotos.forEach((foto, index) => { %>
+                <div class="photo-item animate__animated animate__fadeIn" style="animation-delay: <%= index * 0.2 %>s;">
+                    <img src="<%= foto %>" alt="Foto de <%= nomePet %>">
+                </div>
+            <% }); %>
+        </div>
+
+        <div class="button-group">
+            <a href="/pet/<%= petId %>" class="button">Ver Perfil</a>
+            <a href="/" class="button secondary">Voltar para Início</a>
+        </div>
     </div>
+
+    <script>
+        function createEmojis() {
+            const container = document.getElementById('emojis');
+            const emojis = ['🎉', '🐾', '💖', '⭐', '🌟'];
+            
+            setInterval(() => {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji';
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                container.appendChild(emoji);
+
+                setTimeout(() => {
+                    emoji.remove();
+                }, 6000);
+            }, 300);
+        }
+
+        createEmojis();
+    </script>
 </body>
 </html>

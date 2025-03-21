@@ -1,14 +1,12 @@
 services:
   - type: web
-    name: pstslove
+    name: pstslove2
     env: node
     buildCommand: npm install
     startCommand: node app.js
     envVars:
       - key: PORT
         value: 3000
-      - key: RENDER
-        value: true
     disk:
       name: uploads
       mountPath: /opt/render/project/src/uploads

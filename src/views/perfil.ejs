@@ -3,326 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil do <%= pet.nomePet %></title>
+    <title>Perfil do Pet - <%= pet.nomePet %></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="/css/style.css">
     <style>
+        :root {
+            --primary-color: #FF69B4;
+            --secondary-color: #FFB6C1;
+            --background-color: #FFF5F7;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(255, 105, 180, 0.1);
+        }
+
         .profile-header {
             text-align: center;
-            padding: 3rem 1rem;
-            background: linear-gradient(135deg, #FFE5F1 0%, #FFF5F7 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .floating-hearts {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .heart {
-            position: absolute;
-            font-size: 1.5rem;
-            animation: float-heart 4s ease-in-out infinite;
-            opacity: 0.7;
-        }
-
-        @keyframes float-heart {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-100px) rotate(180deg); }
-            100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
+            margin-bottom: 3rem;
         }
 
         .profile-header h1 {
-            color: #FF69B4;
-            font-size: 2.5em;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 2;
+            color: var(--primary-color);
+            font-size: 3em;
+            margin: 1rem 0;
         }
 
         .profile-header p {
             color: #666;
             font-size: 1.2em;
-            margin-bottom: 2rem;
-            position: relative;
-            z-index: 2;
         }
 
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 2rem auto;
-            overflow: hidden;
+        .counter-section {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .counter-box {
+            background: var(--background-color);
+            padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(255, 105, 180, 0.1);
+            text-align: center;
+            min-width: 150px;
         }
 
-        .carousel-slide {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .carousel-slide.active {
+        .counter-box span {
             display: block;
+            font-size: 3em;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
         }
 
-        .carousel-slide img {
+        .counter-box small {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .photos-section {
+            margin: 3rem 0;
+        }
+
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .slide-emoji {
-            position: absolute;
-            font-size: 2em;
-            animation: float 3s ease-in-out infinite;
-            opacity: 0.8;
-            z-index: 2;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .carousel-nav {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .carousel-nav button {
-            background: #FF69B4;
-            border: none;
+        .back-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary-color);
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .carousel-nav button:hover {
-            background: #FF1493;
-        }
-
-        .pet-info {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(255, 105, 180, 0.1);
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
+            text-decoration: none;
+            border-radius: 50px;
             margin-top: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .info-card {
-            text-align: center;
-            padding: 1.5rem;
-            background: #FFF5F7;
-            border-radius: 15px;
-            transition: transform 0.3s ease;
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
         }
 
-        .info-card:hover {
-            transform: translateY(-5px);
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
         }
 
-        .info-card h3 {
-            color: #FF69B4;
-            margin-bottom: 0.5rem;
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: float-up 4s ease-in-out infinite;
+            opacity: 0.5;
         }
 
-        .info-card p {
-            color: #666;
-            font-size: 1.1em;
-        }
-
-        .time-counter {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 2rem;
-            background: #FFF5F7;
-            border-radius: 15px;
-        }
-
-        .time-counter h2 {
-            color: #FF69B4;
-            margin-bottom: 1rem;
-        }
-
-        .time-units {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .time-unit {
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            min-width: 100px;
-            box-shadow: 0 4px 6px rgba(255, 105, 180, 0.1);
-        }
-
-        .time-unit span {
-            display: block;
-            font-size: 1.5em;
-            color: #FF69B4;
-            margin-bottom: 0.5rem;
-        }
-
-        .time-unit small {
-            color: #666;
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
             .profile-header h1 {
                 font-size: 2em;
             }
 
-            .carousel-container {
-                height: 300px;
+            .counter-box {
+                min-width: 120px;
+                padding: 1rem;
             }
 
-            .carousel-slide {
-                height: 300px;
+            .counter-box span {
+                font-size: 2em;
             }
 
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .time-units {
-                gap: 0.5rem;
-            }
-
-            .time-unit {
-                min-width: 80px;
-                padding: 0.8rem;
+            .photos-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="profile-header">
-        <div class="floating-hearts" id="hearts"></div>
-        <h1 class="animate__animated animate__bounceIn"><%= pet.nomePet %> 🐾</h1>
-        <p class="animate__animated animate__fadeIn">O pet mais amado de <%= pet.nomeDono %></p>
-    </div>
+    <div class="floating-hearts" id="hearts"></div>
 
-    <div class="carousel-container" id="carousel">
-        <% pet.fotos.forEach(function(foto, index) { %>
-            <div class="carousel-slide <%= index === 0 ? 'active' : '' %>">
-                <img src="<%= foto %>" alt="Foto do <%= pet.nomePet %>">
-                <div class="slide-emoji" style="top: <%= Math.random() * 80 %>%; left: <%= Math.random() * 80 %>%;">
-                    <%= ['❤️', '🐾', '🌟', '💖', '✨'][index % 5] %>
-                </div>
-            </div>
-        <% }); %>
-        <div class="carousel-nav">
-            <button onclick="prevSlide()">❮ Anterior</button>
-            <button onclick="nextSlide()">Próximo ❯</button>
+    <div class="container animate__animated animate__fadeIn">
+        <div class="profile-header">
+            <span style="font-size: 4em;">🐾</span>
+            <h1><%= pet.nomePet %></h1>
+            <p>Pet de <%= pet.nomeDono %></p>
+            <p>Chegou em <%= moment(pet.dataPet).format('LL') %></p>
         </div>
-    </div>
 
-    <div class="pet-info">
-        <div class="info-grid">
-            <div class="info-card animate__animated animate__fadeInLeft">
-                <h3>Nome do Pet</h3>
-                <p><%= pet.nomePet %> 🐾</p>
+        <div class="counter-section">
+            <div class="counter-box animate__animated animate__fadeInUp">
+                <span><%= idade.anos %></span>
+                <small>Anos</small>
             </div>
-            <div class="info-card animate__animated animate__fadeInRight">
-                <h3>Nome do Dono</h3>
-                <p><%= pet.nomeDono %> ❤️</p>
+            <div class="counter-box animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                <span><%= idade.meses %></span>
+                <small>Meses</small>
+            </div>
+            <div class="counter-box animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                <span><%= idade.dias %></span>
+                <small>Dias</small>
             </div>
         </div>
 
-        <div class="time-counter animate__animated animate__fadeInUp">
-            <h2>Tempo de Amor e Carinho</h2>
-            <div class="time-units">
-                <% if (idade.anos > 0) { %>
-                    <div class="time-unit">
-                        <span><%= idade.anos %></span>
-                        <small><%= idade.anos === 1 ? 'Ano' : 'Anos' %></small>
+        <div class="photos-section">
+            <div class="photos-grid">
+                <% pet.fotos.forEach((foto, index) => { %>
+                    <div class="photo-item animate__animated animate__fadeIn" style="animation-delay: <%= index * 0.2 %>s;">
+                        <img src="<%= foto %>" alt="Foto de <%= pet.nomePet %>">
                     </div>
-                <% } %>
-                <div class="time-unit">
-                    <span><%= idade.meses %></span>
-                    <small><%= idade.meses === 1 ? 'Mês' : 'Meses' %></small>
-                </div>
-                <div class="time-unit">
-                    <span><%= idade.dias %></span>
-                    <small><%= idade.dias === 1 ? 'Dia' : 'Dias' %></small>
-                </div>
+                <% }); %>
             </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="/" class="back-button">Voltar para Início</a>
         </div>
     </div>
 
     <script>
-        // Animação de corações flutuantes
         function createHearts() {
             const container = document.getElementById('hearts');
-            const emojis = ['❤️', '🐾', '💖', '💕', '💝'];
+            const emojis = ['💖', '💝', '💕', '💗', '💓'];
             
             setInterval(() => {
                 const heart = document.createElement('div');
                 heart.className = 'heart';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                 container.appendChild(heart);
 
+                // Remover o coração após a animação
                 setTimeout(() => {
                     heart.remove();
-                }, 4000);
+                }, 6000);
             }, 300);
         }
 
-        // Carrossel de fotos
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel-slide');
-
-        function showSlide(n) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            currentSlide = (n + slides.length) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
-
-        function nextSlide() {
-            showSlide(currentSlide + 1);
-        }
-
-        function prevSlide() {
-            showSlide(currentSlide - 1);
-        }
-
-        // Inicializar animações
         createHearts();
-
-        // Auto-play do carrossel
-        setInterval(nextSlide, 5000);
     </script>
 </body>
 </html>

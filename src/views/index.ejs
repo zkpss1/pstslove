@@ -3,143 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetsLove - Celebre o Amor pelo seu Pet</title>
+    <title>PetLove - Crie um perfil especial para seu pet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-    <div class="hero-section">
-        <div class="hero-content animate__animated animate__fadeIn">
-            <h1>Celebre o Amor pelo seu Pet</h1>
-            <p class="hero-subtitle">Crie uma página especial que mostra há quanto tempo seu pet está enchendo sua vida de alegria 🐾</p>
-            
-            <div class="features-grid">
-                <div class="feature-item animate__animated animate__fadeInUp">
-                    <span class="emoji">📸</span>
-                    <p>Mostre as fotos mais fofas</p>
-                </div>
-                <div class="feature-item animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
-                    <span class="emoji">⏰</span>
-                    <p>Contador em tempo real</p>
-                </div>
-                <div class="feature-item animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
-                    <span class="emoji">🎨</span>
-                    <p>Design personalizado</p>
-                </div>
-                <div class="feature-item animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
-                    <span class="emoji">📱</span>
-                    <p>QR Code exclusivo</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-section">
-        <div class="form-container animate__animated animate__fadeInUp">
-            <h2>Crie a Página do seu Pet</h2>
-            <form action="/criar-pet" method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="nomeDono">Seu Nome</label>
-                    <input type="text" id="nomeDono" name="nomeDono" required placeholder="Ex: Maria Silva">
-                </div>
-
-                <div class="form-group">
-                    <label for="nomePet">Nome do Pet</label>
-                    <input type="text" id="nomePet" name="nomePet" required placeholder="Ex: Luna">
-                </div>
-
-                <div class="form-group">
-                    <label for="dataPet">Quando seu pet chegou?</label>
-                    <input type="date" id="dataPet" name="dataPet" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="fotos">Fotos do Pet (até 5 fotos)</label>
-                    <div class="file-upload">
-                        <input type="file" id="fotos" name="fotos" multiple accept="image/*" required>
-                        <div class="upload-preview"></div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit">
-                    <span>Criar Página Especial</span>
-                    <div class="btn-emoji">🎉</div>
-                </button>
-            </form>
-        </div>
-
-        <div class="preview-section animate__animated animate__fadeInRight">
-            <div class="phone-mockup">
-                <div class="phone-screen">
-                    <div class="preview-content">
-                        <div class="preview-header">
-                            <span class="preview-emoji">🐾</span>
-                            <h3>Preview</h3>
-                        </div>
-                        <div class="preview-counter">
-                            <div class="preview-time">
-                                <span id="preview-years">0</span>
-                                <small>Anos</small>
-                            </div>
-                            <div class="preview-time">
-                                <span id="preview-months">0</span>
-                                <small>Meses</small>
-                            </div>
-                            <div class="preview-time">
-                                <span id="preview-days">0</span>
-                                <small>Dias</small>
-                            </div>
-                        </div>
-                        <div class="preview-photos">
-                            <div class="preview-photo-placeholder"></div>
-                            <div class="preview-photo-placeholder"></div>
-                            <div class="preview-photo-placeholder"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Preview de fotos
-        const inputFotos = document.getElementById('fotos');
-        const previewContainer = document.querySelector('.upload-preview');
-
-        inputFotos.addEventListener('change', function() {
-            previewContainer.innerHTML = '';
-            const files = Array.from(this.files).slice(0, 5);
-            
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.createElement('div');
-                    preview.className = 'preview-item animate__animated animate__fadeIn';
-                    preview.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <span class="preview-emoji">❤️</span>
-                    `;
-                    previewContainer.appendChild(preview);
-                }
-                reader.readAsDataURL(file);
-            });
-        });
-
-        // Animação do contador preview
-        function animatePreviewCounter() {
-            const elements = ['years', 'months', 'days'];
-            elements.forEach(el => {
-                const element = document.getElementById(`preview-${el}`);
-                const value = Math.floor(Math.random() * 10);
-                element.textContent = value;
-                element.classList.add('animate__animated', 'animate__heartBeat');
-                setTimeout(() => {
-                    element.classList.remove('animate__animated', 'animate__heartBeat');
-                }, 1000);
-            });
+    <style>
+        :root {
+            --primary-color: #FF69B4;
+            --secondary-color: #FFB6C1;
+            --background-color: #FFF5F7;
+            --text-color: #333;
         }
 
-        setInterval(animatePreviewCounter, 3000);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 2rem;
+            background: linear-gradient(135deg, #FFE5F1 0%, #FFF5F7 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            animation: fadeInDown 1s;
+        }
+
+        .hero p {
+            font-size: 1.5em;
+            color: #666;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s 0.5s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.2em;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: bounceIn 1s 1s both;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .floating-pets {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .floating-pet {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        .steps {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .steps h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 3rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--background-color);
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-title {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-bottom: 1rem;
+        }
+
+        .features {
+            padding: 4rem 2rem;
+            background: var(--background-color);
+        }
+
+        .features h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1.2em;
+            }
+
+            .steps-grid, .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.1);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(0.89);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <h1 style="font-size: 1.5em; color: var(--primary-color);">PetLove 🐾</h1>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="floating-pets" id="floating-pets"></div>
+        <div class="hero-content">
+            <h1>Eternize o Amor pelo seu Pet</h1>
+            <p>Crie uma página especial com contador de tempo, fotos e QR Code para celebrar a jornada com seu companheiro peludo 💕</p>
+            <a href="/criar-pet" class="cta-button">Criar Perfil do Pet</a>
+        </div>
+    </section>
+
+    <section class="steps">
+        <h2>Como Funciona?</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-emoji">📝</div>
+                <h3 class="step-title">1. Preencha os Dados</h3>
+                <p>Adicione o nome do seu pet, suas fotos favoritas e a data especial</p>
+            </div>
+            <div class="step-card">
+                <div class="step-emoji">✨</div>
+                <h3 class="step-title">2. Personalize</h3>
+                <p>Escolha as melhores fotos e adicione detalhes especiais</p>
+            </div>
+            <div class="step-card">
+                <div class="step-emoji">🎉</div>
+                <h3 class="step-title">3. Compartilhe</h3>
+                <p>Receba seu QR Code e compartilhe com amigos e família</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>Por que Criar um Perfil?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-emoji">⏰</div>
+                <h3 class="feature-title">Contador de Tempo</h3>
+                <p>Acompanhe quanto tempo seu pet está enchendo sua vida de alegria</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-emoji">📸</div>
+                <h3 class="feature-title">Galeria de Fotos</h3>
+                <p>Guarde e exiba os momentos mais especiais com seu pet</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-emoji">📱</div>
+                <h3 class="feature-title">QR Code Exclusivo</h3>
+                <p>Acesse e compartilhe o perfil do seu pet facilmente</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Animação de pets flutuantes
+        function createFloatingPets() {
+            const container = document.getElementById('floating-pets');
+            const emojis = ['🐶', '🐱', '🐾', '💕', '⭐'];
+            const numPets = 15;
+
+            for (let i = 0; i < numPets; i++) {
+                const pet = document.createElement('div');
+                pet.className = 'floating-pet';
+                pet.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                pet.style.left = `${Math.random() * 100}%`;
+                pet.style.top = `${Math.random() * 100}%`;
+                pet.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(pet);
+            }
+        }
+
+        // Inicializar animações
+        createFloatingPets();
     </script>
 </body>
 </html>

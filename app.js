@@ -45,6 +45,11 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+// Rota para página de criação do perfil
+app.get('/criar-pet', (req, res) => {
+    res.render('criar-pet');
+});
+
 // Rota para criar perfil do pet
 app.post('/criar-pet', upload.array('fotos', 5), async (req, res) => {
     try {
