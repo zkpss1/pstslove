@@ -3,47 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil Criado com Sucesso! - PetsLove</title>
+    <title>Perfil Criado com Sucesso!</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .success-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-title {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .qr-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+        }
+
+        .qr-code {
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .instructions {
+            color: #666;
+            margin: 20px 0;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .pet-info {
+            background: #fff5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #ffe6e6;
+        }
+
+        .pet-info p {
+            margin: 10px 0;
+            color: #444;
+        }
+
+        @media (max-width: 480px) {
+            .success-card {
+                padding: 20px;
+            }
+
+            .qr-code {
+                max-width: 200px;
+            }
+
+            .instructions {
+                font-size: 1em;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>🎉 Perfil Criado com Sucesso! 🎉</h1>
-    </header>
-
-    <main>
-        <section id="success-section">
-            <div class="profile-info">
-                <h2>Informações do Pet</h2>
-                <p><strong>Dono:</strong> <%= nomeDono %></p>
-                <p><strong>Pet:</strong> <%= nomePet %></p>
+    <div class="success-container">
+        <div class="success-card">
+            <h1 class="success-title">🎉 Perfil Criado com Sucesso! 🎉</h1>
+            
+            <div class="pet-info">
+                <p><strong>Nome do Pet:</strong> <%= nomePet %></p>
+                <p><strong>Nome do Dono:</strong> <%= nomeDono %></p>
                 <p><strong>Data:</strong> <%= new Date(dataPet).toLocaleDateString('pt-BR') %></p>
             </div>
 
-            <div class="qr-code-container">
-                <h3>QR Code do seu Pet</h3>
-                <img src="<%= qrCode %>" alt="QR Code do Pet">
-                <p>Escaneie este QR Code para ver o perfil especial do seu pet!</p>
-                <a href="/pet/<%= petId %>" class="btn-visualizar">Ver Perfil do Pet</a>
+            <div class="qr-container">
+                <h2>QR Code do Perfil</h2>
+                <img src="<%= qrCode %>" alt="QR Code do perfil do pet" class="qr-code">
+                <p class="instructions">
+                    Escaneie este QR Code para acessar o perfil do <%= nomePet %> e ver o contador de amor em tempo real! 💕
+                </p>
             </div>
-
-            <div class="photos-preview">
-                <h3>Fotos do Pet</h3>
-                <div class="photo-grid">
-                    <% fotos.forEach(foto => { %>
-                        <div class="photo-item">
-                            <img src="<%= foto %>" alt="Foto do Pet">
-                        </div>
-                    <% }); %>
-                </div>
-            </div>
-
-            <a href="/" class="btn-voltar">Voltar ao Início</a>
-        </section>
-    </main>
-
-    <footer>
-        <p>Feito com ❤️ para amantes de pets</p>
-    </footer>
+        </div>
+    </div>
 </body>
 </html>

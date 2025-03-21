@@ -8,132 +8,77 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
-    <div class="perfil-container">
-        <header class="pet-header">
+    <div class="container">
+        <div class="profile-card">
             <h1 class="animate__animated animate__bounceIn">🐾 <%= pet.nomePet %> 🐾</h1>
-        </header>
+            <p class="owner-text animate__animated animate__fadeIn">Pet amado de <%= pet.nomeDono %></p>
+            
+            <div class="photos-container animate__animated animate__fadeIn">
+                <% pet.fotos.forEach(function(foto) { %>
+                    <img src="<%= foto %>" alt="Foto do <%= pet.nomePet %>" class="pet-photo">
+                <% }); %>
+            </div>
 
-        <section class="pet-info animate__animated animate__fadeIn">
-            <div class="contador-container">
-                <h2>Tempo de Amor e Carinho</h2>
-                <div id="contador">
-                    <div class="tempo-item">
-                        <span id="anos">0</span>
-                        <label>Anos</label>
+            <div class="counter-container animate__animated animate__fadeIn">
+                <h2>Tempo de Amor e Carinho ❤️</h2>
+                <div class="counter">
+                    <div class="counter-item">
+                        <span id="years">0</span>
+                        <span class="label">Anos</span>
                     </div>
-                    <div class="tempo-item">
-                        <span id="meses">0</span>
-                        <label>Meses</label>
+                    <div class="counter-item">
+                        <span id="months">0</span>
+                        <span class="label">Meses</span>
                     </div>
-                    <div class="tempo-item">
-                        <span id="dias">0</span>
-                        <label>Dias</label>
+                    <div class="counter-item">
+                        <span id="days">0</span>
+                        <span class="label">Dias</span>
                     </div>
-                    <div class="tempo-item">
-                        <span id="horas">0</span>
-                        <label>Horas</label>
+                    <div class="counter-item">
+                        <span id="hours">0</span>
+                        <span class="label">Horas</span>
                     </div>
-                    <div class="tempo-item">
-                        <span id="minutos">0</span>
-                        <label>Minutos</label>
+                    <div class="counter-item">
+                        <span id="minutes">0</span>
+                        <span class="label">Minutos</span>
                     </div>
-                    <div class="tempo-item">
-                        <span id="segundos">0</span>
-                        <label>Segundos</label>
+                    <div class="counter-item">
+                        <span id="seconds">0</span>
+                        <span class="label">Segundos</span>
                     </div>
                 </div>
             </div>
 
-            <div class="slideshow-container">
-                <div id="slides">
-                    <% pet.fotos.forEach((foto, index) => { %>
-                        <div class="slide animate__animated animate__fadeIn">
-                            <img src="<%= foto %>" alt="Foto do <%= pet.nomePet %>">
-                            <div class="hearts-overlay"></div>
-                        </div>
-                    <% }); %>
-                </div>
-            </div>
-
-            <div class="mensagem-carinho">
-                <p class="animate__animated animate__heartBeat">
-                    <%= pet.nomePet %> está enchendo de alegria a vida de <%= pet.nomeDono %> há tanto tempo!
-                </p>
-            </div>
-        </section>
+            <p class="love-message animate__animated animate__heartBeat">
+                <%= pet.nomePet %> está enchendo a vida de <%= pet.nomeDono %> de alegria há...
+            </p>
+        </div>
     </div>
 
     <script>
-        // Função para atualizar o contador
-        function atualizarContador() {
-            const dataPet = new Date('<%= pet.dataPet %>');
-            const agora = new Date();
-            const diff = agora - dataPet;
+        const startDate = new Date('<%= pet.dataPet %>');
 
-            // Cálculos precisos considerando anos bissextos e meses diferentes
-            const anos = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
-            const mesesTotais = Math.floor(diff / (1000 * 60 * 60 * 24 * 30.44));
-            const meses = mesesTotais % 12;
-            const dias = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
-            const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+        function updateCounter() {
+            const now = new Date();
+            const diff = now - startDate;
 
-            // Atualizar elementos com animação suave
-            const elementos = {
-                'anos': anos,
-                'meses': meses,
-                'dias': dias,
-                'horas': horas,
-                'minutos': minutos,
-                'segundos': segundos
-            };
+            const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24 * 30.44));
+            const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-            for (let [id, valor] of Object.entries(elementos)) {
-                const elemento = document.getElementById(id);
-                if (elemento.textContent != valor) {
-                    elemento.classList.add('animate__animated', 'animate__flipNumber');
-                    elemento.textContent = valor;
-                    setTimeout(() => {
-                        elemento.classList.remove('animate__animated', 'animate__flipNumber');
-                    }, 500);
-                }
-            }
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
         }
 
-        // Atualizar contador a cada segundo
-        setInterval(atualizarContador, 1000);
-        atualizarContador();
-
-        // Slideshow automático
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-
-        function showSlide(n) {
-            slides.forEach(slide => slide.style.display = 'none');
-            currentSlide = (n + slides.length) % slides.length;
-            slides[currentSlide].style.display = 'block';
-            
-            // Adicionar corações flutuantes
-            const hearts = slides[currentSlide].querySelector('.hearts-overlay');
-            hearts.innerHTML = '';
-            for (let i = 0; i < 5; i++) {
-                const heart = document.createElement('span');
-                heart.className = 'heart animate__animated animate__floating';
-                heart.innerHTML = '❤️';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDelay = Math.random() * 2 + 's';
-                hearts.appendChild(heart);
-            }
-        }
-
-        function nextSlide() {
-            showSlide(currentSlide + 1);
-        }
-
-        // Trocar slide a cada 5 segundos
-        setInterval(nextSlide, 5000);
-        showSlide(0);
+        updateCounter();
+        setInterval(updateCounter, 1000);
     </script>
 </body>
 </html>
