@@ -3,45 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetsLove - Crie o Perfil do seu Pet</title>
+    <title>PetsLove - Celebre o Amor pelo seu Pet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <header>
-        <h1>🐾 PetsLove 🐾</h1>
-        <p>Crie um perfil especial para seu amiguinho!</p>
-    </header>
+    <div class="hero-section">
+        <div class="hero-content animate__animated animate__fadeIn">
+            <h1>Celebre o Amor pelo seu Pet</h1>
+            <p class="hero-subtitle">Crie uma página especial que mostra há quanto tempo seu pet está enchendo sua vida de alegria 🐾</p>
+            
+            <div class="features-grid">
+                <div class="feature-item animate__animated animate__fadeInUp">
+                    <span class="emoji">📸</span>
+                    <p>Mostre as fotos mais fofas</p>
+                </div>
+                <div class="feature-item animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <span class="emoji">⏰</span>
+                    <p>Contador em tempo real</p>
+                </div>
+                <div class="feature-item animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    <span class="emoji">🎨</span>
+                    <p>Design personalizado</p>
+                </div>
+                <div class="feature-item animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
+                    <span class="emoji">📱</span>
+                    <p>QR Code exclusivo</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <main>
-        <section id="form-section">
+    <div class="form-section">
+        <div class="form-container animate__animated animate__fadeInUp">
+            <h2>Crie a Página do seu Pet</h2>
             <form action="/criar-pet" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="nomeDono">Seu Nome:</label>
-                    <input type="text" id="nomeDono" name="nomeDono" required>
+                    <label for="nomeDono">Seu Nome</label>
+                    <input type="text" id="nomeDono" name="nomeDono" required placeholder="Ex: Maria Silva">
                 </div>
 
                 <div class="form-group">
-                    <label for="nomePet">Nome do Pet:</label>
-                    <input type="text" id="nomePet" name="nomePet" required>
+                    <label for="nomePet">Nome do Pet</label>
+                    <input type="text" id="nomePet" name="nomePet" required placeholder="Ex: Luna">
                 </div>
 
                 <div class="form-group">
-                    <label for="dataPet">Data de Nascimento/Adoção:</label>
+                    <label for="dataPet">Quando seu pet chegou?</label>
                     <input type="date" id="dataPet" name="dataPet" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="fotos">Fotos do Pet (máximo 5):</label>
-                    <input type="file" id="fotos" name="fotos" accept="image/*" multiple required>
+                    <label for="fotos">Fotos do Pet (até 5 fotos)</label>
+                    <div class="file-upload">
+                        <input type="file" id="fotos" name="fotos" multiple accept="image/*" required>
+                        <div class="upload-preview"></div>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-submit">Criar Perfil do Pet</button>
+                <button type="submit" class="btn-submit">
+                    <span>Criar Página Especial</span>
+                    <div class="btn-emoji">🎉</div>
+                </button>
             </form>
-        </section>
-    </main>
+        </div>
 
-    <footer>
-        <p>Feito com ❤️ para amantes de pets</p>
-    </footer>
+        <div class="preview-section animate__animated animate__fadeInRight">
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="preview-content">
+                        <div class="preview-header">
+                            <span class="preview-emoji">🐾</span>
+                            <h3>Preview</h3>
+                        </div>
+                        <div class="preview-counter">
+                            <div class="preview-time">
+                                <span id="preview-years">0</span>
+                                <small>Anos</small>
+                            </div>
+                            <div class="preview-time">
+                                <span id="preview-months">0</span>
+                                <small>Meses</small>
+                            </div>
+                            <div class="preview-time">
+                                <span id="preview-days">0</span>
+                                <small>Dias</small>
+                            </div>
+                        </div>
+                        <div class="preview-photos">
+                            <div class="preview-photo-placeholder"></div>
+                            <div class="preview-photo-placeholder"></div>
+                            <div class="preview-photo-placeholder"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Preview de fotos
+        const inputFotos = document.getElementById('fotos');
+        const previewContainer = document.querySelector('.upload-preview');
+
+        inputFotos.addEventListener('change', function() {
+            previewContainer.innerHTML = '';
+            const files = Array.from(this.files).slice(0, 5);
+            
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.createElement('div');
+                    preview.className = 'preview-item animate__animated animate__fadeIn';
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <span class="preview-emoji">❤️</span>
+                    `;
+                    previewContainer.appendChild(preview);
+                }
+                reader.readAsDataURL(file);
+            });
+        });
+
+        // Animação do contador preview
+        function animatePreviewCounter() {
+            const elements = ['years', 'months', 'days'];
+            elements.forEach(el => {
+                const element = document.getElementById(`preview-${el}`);
+                const value = Math.floor(Math.random() * 10);
+                element.textContent = value;
+                element.classList.add('animate__animated', 'animate__heartBeat');
+                setTimeout(() => {
+                    element.classList.remove('animate__animated', 'animate__heartBeat');
+                }, 1000);
+            });
+        }
+
+        setInterval(animatePreviewCounter, 3000);
+    </script>
 </body>
 </html>

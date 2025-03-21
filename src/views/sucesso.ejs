@@ -3,93 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil Criado com Sucesso!</title>
+    <title>Perfil Criado com Sucesso! | <%= nomePet %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        .success-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
+        .floating-emoji {
+            position: absolute;
+            font-size: 2em;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .qr-section {
+            position: relative;
+            padding: 2rem;
             text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-section img {
+            max-width: 200px;
+            margin: 1rem auto;
+            display: block;
+        }
+
+        .qr-section h2 {
+            color: #FF69B4;
+            margin-bottom: 1rem;
+            font-size: 1.5em;
+        }
+
+        .success-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #FFE5F1 0%, #FFF5F7 100%);
         }
 
         .success-card {
             background: white;
+            padding: 2rem;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 16px rgba(255, 105, 180, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .success-header {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
         .success-title {
-            color: #4CAF50;
-            margin-bottom: 20px;
+            color: #FF69B4;
+            font-size: 2em;
+            margin-bottom: 1rem;
         }
 
-        .qr-container {
-            margin: 30px 0;
-            padding: 20px;
-            background: #f8f9ff;
-            border-radius: 15px;
-        }
-
-        .qr-code {
-            max-width: 300px;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .instructions {
+        .success-message {
             color: #666;
-            margin: 20px 0;
-            font-size: 1.1em;
-            line-height: 1.6;
+            font-size: 1.2em;
+            margin-bottom: 2rem;
         }
 
         .pet-info {
-            background: #fff5f5;
-            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: #FFF5F7;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .info-card h3 {
+            color: #FF69B4;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
             border-radius: 10px;
-            margin: 20px 0;
-            border: 2px solid #ffe6e6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .pet-info p {
-            margin: 10px 0;
-            color: #444;
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
-        @media (max-width: 480px) {
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #FF69B4;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .back-button:hover {
+            background: #FF1493;
+        }
+
+        @media (max-width: 768px) {
             .success-card {
-                padding: 20px;
+                padding: 1rem;
             }
 
-            .qr-code {
-                max-width: 200px;
-            }
-
-            .instructions {
-                font-size: 1em;
+            .photo-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             }
         }
     </style>
 </head>
 <body>
-    <div class="success-container">
-        <div class="success-card">
-            <h1 class="success-title">🎉 Perfil Criado com Sucesso! 🎉</h1>
-            
-            <div class="pet-info">
-                <p><strong>Nome do Pet:</strong> <%= nomePet %></p>
-                <p><strong>Nome do Dono:</strong> <%= nomeDono %></p>
-                <p><strong>Data:</strong> <%= new Date(dataPet).toLocaleDateString('pt-BR') %></p>
+    <div class="success-page">
+        <div class="success-card animate__animated animate__fadeIn">
+            <div class="success-header">
+                <h1 class="success-title animate__animated animate__bounceIn">
+                    Perfil Criado com Sucesso! 🎉
+                </h1>
+                <p class="success-message animate__animated animate__fadeIn">
+                    O perfil de <%= nomePet %> foi criado e está pronto para ser compartilhado!
+                </p>
             </div>
 
-            <div class="qr-container">
+            <div class="pet-info">
+                <div class="info-card animate__animated animate__fadeInLeft">
+                    <h3>Nome do Pet</h3>
+                    <p><%= nomePet %> 🐾</p>
+                </div>
+                <div class="info-card animate__animated animate__fadeInRight">
+                    <h3>Nome do Dono</h3>
+                    <p><%= nomeDono %> ❤️</p>
+                </div>
+                <div class="info-card animate__animated animate__fadeInUp">
+                    <h3>Data Especial</h3>
+                    <p><%= dataPet %> 📅</p>
+                </div>
+            </div>
+
+            <% if (fotos && fotos.length > 0) { %>
+                <div class="photo-grid">
+                    <% fotos.forEach(function(foto) { %>
+                        <div class="photo-item animate__animated animate__zoomIn">
+                            <img src="<%= foto %>" alt="Foto do <%= nomePet %>">
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+
+            <div class="qr-section">
+                <% ['🐾', '❤️', '🌟', '💖', '✨'].forEach(function(emoji, index) { %>
+                    <div class="floating-emoji" 
+                         style="left: <%= 20 + index * 15 %>%; 
+                                top: <%= 20 + index * 10 %>%; 
+                                animation-delay: <%= index * 0.5 %>s;">
+                        <%= emoji %>
+                    </div>
+                <% }); %>
+                
                 <h2>QR Code do Perfil</h2>
-                <img src="<%= qrCode %>" alt="QR Code do perfil do pet" class="qr-code">
-                <p class="instructions">
-                    Escaneie este QR Code para acessar o perfil do <%= nomePet %> e ver o contador de amor em tempo real! 💕
-                </p>
+                <img src="<%= qrCode %>" alt="QR Code do perfil do <%= nomePet %>" class="animate__animated animate__fadeIn">
+                <p>Escaneie para acessar o perfil de <%= nomePet %></p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="/" class="back-button">Voltar para Home</a>
             </div>
         </div>
     </div>
