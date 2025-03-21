@@ -11,6 +11,10 @@ moment.locale('pt-br');
 const app = express();
 const port = process.env.PORT || 3005;
 
+// Aumentar limite do payload
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
 // Configuração de diretórios
 const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 
@@ -29,13 +33,16 @@ const storage = multer.diskStorage({
         cb(null, uploadDir);
     },
     filename: function(req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
+        cb(null, Date.now() + '-' + file.originalname.replace(/[^a-zA-Z0-9.]/g, ''));
     }
 });
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10000000 }, // 10MB
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB
+        files: 5 // máximo de 5 arquivos
+    },
     fileFilter: function(req, file, cb) {
         const filetypes = /jpeg|jpg|png|gif/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -44,7 +51,7 @@ const upload = multer({
         if (mimetype && extname) {
             return cb(null, true);
         } else {
-            cb('Erro: Apenas imagens são permitidas!');
+            cb('Erro: Apenas imagens são permitidas (jpg, jpeg, png, gif)');
         }
     }
 });
@@ -54,11 +61,18 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(process.cwd(), 'src', 'views'));
 app.use(express.static(path.join(process.cwd(), 'src', 'public')));
 app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
-app.use(express.urlencoded({ extended: true }));
 
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
     console.error('Erro na aplicação:', err);
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(413).send('Erro: Arquivo muito grande. O tamanho máximo é 5MB.');
+        }
+        if (err.code === 'LIMIT_FILE_COUNT') {
+            return res.status(413).send('Erro: Máximo de 5 arquivos permitidos.');
+        }
+    }
     res.status(500).send('Algo deu errado! 😢');
 });
 
@@ -76,13 +90,24 @@ app.get('/', (req, res) => {
 app.post('/criar-pet', upload.array('fotos', 5), async (req, res) => {
     try {
         const { nomeDono, nomePet, dataPet } = req.body;
-        const fotos = req.files ? req.files.map(file => '/uploads/' + file.filename) : [];
+        
+        // Verificar se há arquivos
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).send('Por favor, envie pelo menos uma foto do pet.');
+        }
+
+        // Processar fotos
+        const fotos = req.files.map(file => '/uploads/' + file.filename);
         
         // Gerar ID único para o pet
         const petId = Date.now().toString();
         
-        // Gerar QR Code
-        const qrCodeUrl = await QRCode.toDataURL(`${req.protocol}://${req.get('host')}/pet/${petId}`);
+        // Gerar QR Code com tamanho menor
+        const qrCodeUrl = await QRCode.toDataURL(`${req.protocol}://${req.get('host')}/pet/${petId}`, {
+            width: 300,
+            margin: 2,
+            quality: 0.8
+        });
         
         res.render('sucesso', {
             nomeDono,
@@ -101,7 +126,6 @@ app.post('/criar-pet', upload.array('fotos', 5), async (req, res) => {
 // Rota para visualizar perfil do pet
 app.get('/pet/:id', (req, res) => {
     try {
-        // Dados de exemplo para teste
         const petData = {
             nomeDono: 'Maria',
             nomePet: 'Luna',
