@@ -9,12 +9,18 @@ const fs = require('fs');
 moment.locale('pt-br');
 
 const app = express();
-const port = 3005;
+const port = process.env.PORT || 3005;
+
+// Configuração de diretórios
+const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 
 // Garantir que o diretório de uploads existe
-const uploadDir = path.join(__dirname, 'src', 'public', 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+try {
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+} catch (err) {
+    console.error('Erro ao criar diretório de uploads:', err);
 }
 
 // Configuração do multer para upload de imagens
@@ -45,19 +51,25 @@ const upload = multer({
 
 // Configurações do Express
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src', 'views'));
-app.use(express.static(path.join(__dirname, 'src', 'public')));
+app.set('views', path.join(process.cwd(), 'src', 'views'));
+app.use(express.static(path.join(process.cwd(), 'src', 'public')));
+app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
 app.use(express.urlencoded({ extended: true }));
 
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
-    console.error(err.stack);
+    console.error('Erro na aplicação:', err);
     res.status(500).send('Algo deu errado! 😢');
 });
 
 // Rota principal
 app.get('/', (req, res) => {
-    res.render('index');
+    try {
+        res.render('index');
+    } catch (error) {
+        console.error('Erro na rota principal:', error);
+        res.status(500).send('Erro ao carregar página inicial');
+    }
 });
 
 // Rota para criar perfil do pet
@@ -70,7 +82,7 @@ app.post('/criar-pet', upload.array('fotos', 5), async (req, res) => {
         const petId = Date.now().toString();
         
         // Gerar QR Code
-        const qrCodeUrl = await QRCode.toDataURL(`http://${req.get('host')}/pet/${petId}`);
+        const qrCodeUrl = await QRCode.toDataURL(`${req.protocol}://${req.get('host')}/pet/${petId}`);
         
         res.render('sucesso', {
             nomeDono,
@@ -110,14 +122,16 @@ app.get('/pet/:id', (req, res) => {
     }
 });
 
-// Iniciar o servidor com tratamento de erro
-const server = app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
-}).on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-        console.error(`Porta ${port} já está em uso. Tentando outra porta...`);
-        server.listen(0); // Tentar uma porta aleatória disponível
-    } else {
-        console.error('Erro ao iniciar servidor:', err);
-    }
+// Tratamento para rotas não encontradas
+app.use((req, res) => {
+    res.status(404).send('Página não encontrada 😢');
 });
+
+// Iniciar o servidor
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Servidor rodando em http://localhost:${port}`);
+    });
+}
+
+module.exports = app;
