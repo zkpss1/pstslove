@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de <%= pet.nome %></title>
+    <link rel="stylesheet" href="../public/css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Perfil do Pet: <%= pet.nome %></h1>
+    </header>
+
+    <section id="pet-info">
+        <p>Idade: <%= pet.idade %> anos</p>
+        <div id="pet-fotos">
+            <% pet.fotos.forEach(foto => { %>
+                <img src="<%= foto %>" alt="Foto de <%= pet.nome %>">
+            <% }); %>
+        </div>
+    </section>
+
+    <section id="qr-code">
+        <h2>Compartilhe o perfil do seu pet:</h2>
+        <img src="<%= pet.qrCodeUrl %>" alt="QR code para a página do pet">
+    </section>
+
+</body>
+</html>

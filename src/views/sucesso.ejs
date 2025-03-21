@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Criado com Sucesso! - PetsLove</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>🎉 Perfil Criado com Sucesso! 🎉</h1>
+    </header>
+
+    <main>
+        <section id="success-section">
+            <div class="profile-info">
+                <h2>Informações do Pet</h2>
+                <p><strong>Dono:</strong> <%= nomeDono %></p>
+                <p><strong>Pet:</strong> <%= nomePet %></p>
+                <p><strong>Data:</strong> <%= new Date(dataPet).toLocaleDateString('pt-BR') %></p>
+            </div>
+
+            <div class="qr-code-container">
+                <h3>QR Code do seu Pet</h3>
+                <img src="<%= qrCode %>" alt="QR Code do Pet">
+                <p>Escaneie este QR Code para ver o perfil especial do seu pet!</p>
+                <a href="/pet/<%= petId %>" class="btn-visualizar">Ver Perfil do Pet</a>
+            </div>
+
+            <div class="photos-preview">
+                <h3>Fotos do Pet</h3>
+                <div class="photo-grid">
+                    <% fotos.forEach(foto => { %>
+                        <div class="photo-item">
+                            <img src="<%= foto %>" alt="Foto do Pet">
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+            <a href="/" class="btn-voltar">Voltar ao Início</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>Feito com ❤️ para amantes de pets</p>
+    </footer>
+</body>
+</html>
